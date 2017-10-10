@@ -3,3 +3,5 @@
 ################################################################################
 
 /TemplateUpdaterConsole/obj/Release
+/TemplateUpdaterConsole/bin
+/TemplateUpdaterConsole/obj/Debug
