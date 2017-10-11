@@ -20,7 +20,7 @@ namespace TemplateUpdaterConsole
       {
          List<String> files = GetFileList();
          List<TPProj> pList = ProcessFiles(files);
-         CreateOutputFile(@"c:\a\nateList.csv", pList);
+         CreateOutputFile(@"d:\nateList.csv", pList);
       }
 
       #endregion
@@ -33,7 +33,7 @@ namespace TemplateUpdaterConsole
 
          List<String> files = new List<String>();
 
-         DirectoryInfo di = new DirectoryInfo(@"\\mtstore\Releases\TruePlanning\_Templates");
+         DirectoryInfo di = new DirectoryInfo(@"d:\Online Template");
 
          FileInfo[] filelist = di.GetFiles();
 
@@ -60,34 +60,41 @@ namespace TemplateUpdaterConsole
             foreach (String s in files)
             {
                try
-               {
-                  p = null;
-                  Console.WriteLine($"Processing {cnt}/{tcnt}: {s}");
-                  p = app.OpenProject(s);
+                    {
+                        p = null;
+                        Console.WriteLine($"Processing {cnt}/{tcnt}: {s}");
+                        p = app.OpenProject(s);
 
-                  p.IsApplyEscalation = false;
-                  DateTime dt = new DateTime(2017, 1, 1);
-                  p.OutputYear = dt;
+                        p.IsApplyEscalation = false;
+                        DateTime dt = new DateTime(2017, 1, 1);
+                        p.OutputYear = dt;
 
-                  p.Calculate();
+                        Console.WriteLine(p.Country.Name);
 
-                  TP.CostObject sf = p.CostObjects[1];
+                        TP.Country myCountry = app.Countries.ItemByName("United States");
+                        p.Country = myCountry;
 
+                        Console.WriteLine(p.Country.Name);
 
-                  Double tdc = sf.Metrics.ItemByName("Development Cost").Value;
-                  Double upc = sf.Metrics.ItemByName("Unit Production Cost").Value;
-                  Double aupc = sf.Metrics.ItemByName("Amortized Unit Production Cost").Value;
-                  Double tw = sf.Metrics.ItemByName("Total Weight").Value;
+                        p.Calculate();
 
-                  String fName = Path.GetFileNameWithoutExtension(s);
+                        TP.CostObject sf = p.CostObjects[1];
 
-                  TPProj curP = new TPProj() { Name = fName, TotalDevelopmentCost = tdc, UnitProductionCost = upc, AmortizedUnitProductionCost = aupc, TotalWeight = tw };
-                  pList.Add(curP);
+                        Double tdc = sf.Metrics.ItemByName("Development Cost").Value;
+                        Double upc = sf.Metrics.ItemByName("Unit Production Cost").Value;
+                        Double aupc = sf.Metrics.ItemByName("Amortized Unit Production Cost").Value;
+                        Double prodq = sf.Metrics.ItemByName("Production Quantity").Value;
+                        Double tw = sf.Metrics.ItemByName("Total Weight").Value;
 
-                  p.Close();
-                  p = null;
-               }
-               catch(Exception err)
+                        String fName = Path.GetFileNameWithoutExtension(s);
+
+                        TPProj curP = new TPProj() { Name = fName, TotalDevelopmentCost = tdc, UnitProductionCost = upc, AmortizedUnitProductionCost = aupc, ProductionQuantity = prodq, TotalWeight = tw };
+                        pList.Add(curP);
+
+                        p.Close();
+                        p = null;
+                    }
+                    catch (Exception err)
                {
                   Console.WriteLine($"Error on {cnt}/{tcnt}: {err.Message}");
                   String fName = Path.GetFileNameWithoutExtension(s);
@@ -119,7 +126,12 @@ namespace TemplateUpdaterConsole
          return (pList);
       }
 
-      private void CreateOutputFile(String fileName, List<TPProj> pData)
+        private static TP.Countries GetCountries(TP.Application app)
+        {
+            return app.Countries;
+        }
+
+        private void CreateOutputFile(String fileName, List<TPProj> pData)
       {
          using (StreamWriter sw = new StreamWriter(fileName))
          {
