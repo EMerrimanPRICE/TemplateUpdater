@@ -14,6 +14,7 @@ namespace TemplateUpdaterConsole
       private Double _totalDevCost;
       private Double _UnitProdCost;
       private Double _AmtUnitProdCost;
+      private Double _ProdQuantity;
       private Double _TotalWeight;
       private String _err;
 
@@ -47,6 +48,12 @@ namespace TemplateUpdaterConsole
          set => _TotalWeight = value;
       }
 
+      public Double ProductionQuantity
+      {
+         get => _ProdQuantity;
+         set => _ProdQuantity = value;
+      }
+
       public String Error
       {
          get => _err;
@@ -60,7 +67,7 @@ namespace TemplateUpdaterConsole
 
       public String DumpAsCSVLine()
       {
-         String s = $"\"{_name}\",\"{_totalDevCost}\",\"{_UnitProdCost}\",\"{_AmtUnitProdCost}\",\"{_TotalWeight}\",\"{_err}\"";
+         String s = $"\"{_name}\",\"{_totalDevCost}\",\"{_UnitProdCost}\",\"{_AmtUnitProdCost}\",\"{_ProdQuantity}\",\"{_TotalWeight}\",\"{_err}\"";
          return (s);
       }
 
