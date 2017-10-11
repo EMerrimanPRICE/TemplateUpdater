@@ -126,11 +126,6 @@ namespace TemplateUpdaterConsole
          return (pList);
       }
 
-        private static TP.Countries GetCountries(TP.Application app)
-        {
-            return app.Countries;
-        }
-
         private void CreateOutputFile(String fileName, List<TPProj> pData)
       {
          using (StreamWriter sw = new StreamWriter(fileName))
