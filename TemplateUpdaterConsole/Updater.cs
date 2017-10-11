@@ -126,7 +126,7 @@ namespace TemplateUpdaterConsole
          return (pList);
       }
 
-        private void CreateOutputFile(String fileName, List<TPProj> pData)
+      private void CreateOutputFile(String fileName, List<TPProj> pData)
       {
          using (StreamWriter sw = new StreamWriter(fileName))
          {
